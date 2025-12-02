@@ -146,6 +146,20 @@ app.delete("/users/:id", async (req: Request, res: Response) => {
   const id = req.params.id;
   try {
     const result = await pool.query(`DELETE FROM users WHERE id=$1`, [id]);
+    if (result.rowCount === 0) {
+      res.status(500).json({
+        success: false,
+        message: "User Delete unsuccessfully",
+        data: result.rows,
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        message: "User get unsuccessfully",
+        data: result.rows,
+      });
+    }
+    console.log(result);
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -156,6 +170,34 @@ app.delete("/users/:id", async (req: Request, res: Response) => {
   res.status(200).json({
     success: true,
     message: "User Deleted successfully",
+  });
+});
+
+app.post("/todo", async (req: Request, res: Response) => {
+  const { user_id, title } = req.body;
+  console.log(req.body);
+  try {
+    const result = await pool.query(
+      `INSERT INTO todos(user_id,title) VALUES($1,$2) RETURNING *`,
+      [user_id, title]
+    );
+    console.log(result);
+    res.status(201).json({
+      success: "success",
+      message: "data inserted successfully",
+      data: result.rows[0],
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "data inserted unsuccessfully",
+      error: error,
+    });
+  }
+
+  res.status(201).json({
+    success: "success",
+    message: "data inserted successfully",
   });
 });
 
