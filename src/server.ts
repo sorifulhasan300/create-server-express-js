@@ -112,7 +112,52 @@ app.get("/users/:id", async (req: Request, res: Response) => {
   }
 });
 
+app.put("/users/:id", async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const { name, email } = req.body;
+  try {
+    const result = await pool.query(
+      `UPDATE users SET name=$1,email=$2 WHERE id=$3 RETURNING *`,
+      [name, email, id]
+    );
+    if (result.rows.length === 1) {
+      res.status(200).json({
+        success: true,
+        message: "User update successfully",
+        data: result.rows,
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "User update unsuccessfully",
+        data: result.rows,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "User get unsuccessfully",
+      error: error,
+    });
+  }
+});
 
+app.delete("/users/:id", async (req: Request, res: Response) => {
+  const id = req.params.id;
+  try {
+    const result = await pool.query(`DELETE FROM users WHERE id=$1`, [id]);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "User get unsuccessfully",
+      error: error,
+    });
+  }
+  res.status(200).json({
+    success: true,
+    message: "User Deleted successfully",
+  });
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
