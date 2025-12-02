@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import { Pool } from "pg";
 import dotenv from "dotenv";
 import path from "path";
@@ -34,9 +34,15 @@ const initDB = async () => {
       updated_at TIMESTAMP DEFAULT NOW()
       )`);
 };
+
 initDB();
 
-app.get("/", (req: Request, res: Response) => {
+const logger = (req: Request, res: Response, next: NextFunction) => {
+  console.log("in the logger function");
+  next();
+};
+
+app.get("/", logger, (req: Request, res: Response) => {
   res.send("Hello next level developer");
 });
 
@@ -198,6 +204,34 @@ app.post("/todo", async (req: Request, res: Response) => {
   res.status(201).json({
     success: "success",
     message: "data inserted successfully",
+  });
+});
+
+app.get("/todo", async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query(`SELECT * FROM todos`);
+    res.status(200).json({
+      success: true,
+      message: "Todos get successfully",
+      data: result.rows,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Todos get unsuccessfully",
+      error: error,
+    });
+  }
+  res.status(500).json({
+    success: false,
+    message: "User get unsuccessfully",
+  });
+});
+
+app.use((req, res) => {
+  res.status(404).json({
+    message: "path not found",
+    req: req,
   });
 });
 
