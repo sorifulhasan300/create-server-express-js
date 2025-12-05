@@ -4,6 +4,7 @@ import initDB, { pool } from "./config/database";
 import { logger } from "./middleware/middleware";
 import { userRoutes } from "./modules/users/user.route";
 import { todoRouter } from "./modules/todo/user.route";
+import { AuthRouter } from "./modules/auth/auth.route";
 
 const app = express();
 const port = config.port;
@@ -31,6 +32,8 @@ app.use("/user", userRoutes);
 app.use("/todo", todoRouter);
 
 app.use("/todo", todoRouter);
+
+app.use("/auth", AuthRouter);
 
 app.use((req, res) => {
   res.status(404).json({

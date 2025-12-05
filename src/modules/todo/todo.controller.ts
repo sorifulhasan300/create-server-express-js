@@ -41,10 +41,6 @@ const getTodo = async (req: Request, res: Response) => {
       error: error,
     });
   }
-  res.status(500).json({
-    success: false,
-    message: "User get unsuccessfully",
-  });
 };
 
 export const Todo = {
