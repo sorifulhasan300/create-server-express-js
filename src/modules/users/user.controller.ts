@@ -34,7 +34,6 @@ const getUsers = async (req: Request, res: Response) => {
       message: "User get successfully",
       data: result.rows,
     });
-    console.log(result);
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -42,10 +41,6 @@ const getUsers = async (req: Request, res: Response) => {
       error: error,
     });
   }
-  res.status(500).json({
-    success: false,
-    message: "User get unsuccessfully",
-  });
 };
 
 const getSingleUser = async (req: Request, res: Response) => {

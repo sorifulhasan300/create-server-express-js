@@ -5,7 +5,6 @@ const loginUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   try {
     const result = await loginUserService(email, password);
-
     res.status(200).json({
       success: true,
       message: "Login Successfully",

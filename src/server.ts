@@ -5,6 +5,7 @@ import { logger } from "./middleware/middleware";
 import { userRoutes } from "./modules/users/user.route";
 import { todoRouter } from "./modules/todo/user.route";
 import { AuthRouter } from "./modules/auth/auth.route";
+import { auth } from "./middleware/auth";
 
 const app = express();
 const port = config.port;
@@ -15,21 +16,7 @@ app.use(express.json());
 
 initDB();
 
-app.get("/", logger, (req: Request, res: Response) => {
-  res.send("Hello next level developer");
-});
-
-app.use("/users", userRoutes);
-
-app.use("/users", userRoutes);
-
 app.use("/user", userRoutes);
-
-app.use("/user", userRoutes);
-
-app.use("/user", userRoutes);
-
-app.use("/todo", todoRouter);
 
 app.use("/todo", todoRouter);
 
